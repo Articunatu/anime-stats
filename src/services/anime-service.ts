@@ -12,6 +12,8 @@ interface AnimeData {
     scored_by: number;
     aired: Aired | null;
     images: Images | null;
+    malid: number;
+    episodes: number;
 }
 
 interface Aired {
@@ -51,12 +53,12 @@ class AnimeService {
                 if (existingAnime) {
                     const amountOfSeasons = existingAnime.seasons.length;
                     const newSeason: Season = {
-                        id: Date.now(),
+                        id: data.malid,
                         animeId: existingAnime.id,
                         number: amountOfSeasons + 1,
                         audienceScore: data.score ?? 0,
                         amtOfScorers: data.scored_by ?? 0,
-                        amtOfEpisodes: 0,
+                        amtOfEpisodes: data.episodes,
                         premier: data.aired?.from ?? '',
                         finale: data.aired?.to ?? '',
                         imageUrl: data.images?.jpg.image_url ?? '',
@@ -65,11 +67,11 @@ class AnimeService {
                     existingAnime.seasons.push(newSeason);
                 } else {
                     const newAnime: Anime = {
-                        id: Date.now(),
+                        id: data.malid,
                         title,
                         seasons: [
                             {
-                                id: Date.now(),
+                                id: data.malid,
                                 animeId: Date.now(),
                                 number: 1,
                                 audienceScore: data.score ?? 0,
@@ -85,7 +87,6 @@ class AnimeService {
                     animeList.push(newAnime);
                 }
             }
-            // Save the data to localStorage for future use
             await this.saveLocalData(animeList);
         }
 
