@@ -1,72 +1,75 @@
+import React from 'react';
 import styled from 'styled-components';
-import Anime from '../models/anime'; 
-import Season from '../models/season'; 
+import Anime from '../models/anime';
 
-interface CardProps {
-    anime: Anime;
-}
-
-const CardContainer = styled.div`
-    display: flex;
-    align-items: center;
+const Card = styled.div`
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 250px;
     margin: 1em;
     padding: 1em;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
-const ImageContainer = styled.div`
-    flex: 0 0 150px;  // Fixera bildens bredd till 150px
-    margin-right: 1em;
+const Title = styled.h3`
+    font-size: 1.25em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 0.5em;
 `;
 
 const Image = styled.img`
     width: 100%;
     height: auto;
     border-radius: 8px;
+    margin-bottom: 1em;
 `;
 
-const InfoContainer = styled.div`
-    flex: 1;
+const Info = styled.div`
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5em;
 `;
 
-const Title = styled.h3`
-    margin: 0;
-    font-size: 1.5em;
-    color: #BF4F74;
+const InfoText = styled.p`
+    font-size: 0.9em;
+    color: #666;
 `;
 
-const SeasonInfo = styled.p`
-    font-size: 1.1em;
-    margin: 0.5em 0;
-`;
+const CardComponent: React.FC<{ anime: Anime }> = ({ anime }) => {
+    const calculateAverageScore = () => {
+        const totalScore = anime.seasons.reduce((sum, season) => sum + season.audienceScore, 0);
+        return totalScore / anime.seasons.length;
+    };
 
-const Card: React.FC<CardProps> = ({ anime }) => {
-    const seasons: Season[] = anime.seasons;
+    const getFirstSeasonDate = () => anime.seasons[0].premier;
 
-    const averageScore = seasons.reduce((acc, season) => acc + season.audienceScore, 0) / seasons.length;
-    const premier = seasons[0].premier;
-    const finale = seasons[seasons.length - 1].finale;
-    const totalEpisodes = seasons.reduce((acc, season) => acc + season.amtOfEpisodes, 0);
-    const lastSeasonNumber = seasons[seasons.length - 1].number;
+    const getLastSeasonDate = () => anime.seasons[anime.seasons.length - 1].finale;
+
+    const getTotalEpisodes = () => anime.seasons.reduce((sum, season) => sum + season.amtOfEpisodes, 0);
+
+    const getLastSeasonNumber = () => anime.seasons[anime.seasons.length - 1].number;
+
+    const imageUrl = anime.seasons[0].imageUrl;
 
     return (
-        <CardContainer>
-            <ImageContainer>
-                <Image src={anime.seasons[0].imageUrl} alt={anime.title} />
-            </ImageContainer>
-            <InfoContainer>
-                <Title>{anime.title}</Title>
-                <SeasonInfo>Average Score: {averageScore.toFixed(2)}</SeasonInfo>
-                <SeasonInfo>Total Episodes: {totalEpisodes}</SeasonInfo>
-                <SeasonInfo>Premiered: {premier}</SeasonInfo>
-                <SeasonInfo>Finale: {finale}</SeasonInfo>
-                <SeasonInfo>Seasons: {lastSeasonNumber}</SeasonInfo>
-            </InfoContainer>
-        </CardContainer>
+        <Card>
+            <Title>{anime.title}</Title>
+            <Image src={imageUrl} alt={anime.title} />
+            <Info>
+                <InfoText>Score: {calculateAverageScore().toFixed(1)}</InfoText>
+                <InfoText>Premier: {getFirstSeasonDate()}</InfoText>
+                <InfoText>Finale: {getLastSeasonDate()}</InfoText>
+                <InfoText>Episodes: {getTotalEpisodes()}</InfoText>
+                <InfoText>Seasons: {getLastSeasonNumber()}</InfoText>
+            </Info>
+        </Card>
     );
 };
 
-export default Card;
+export default CardComponent;

@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import GridComponent from './components/grid';
-import  Anime from './models/anime'; 
 import AnimeService from './services/anime-service';
+import Anime from './models/anime'; 
 
 const App: React.FC = () => {
     const [animes, setAnimes] = useState<Anime[]>([]);
 
     useEffect(() => {
-      const fetchAnimes = async () => {
-          const animeService = new AnimeService();  
-          const animeList = await animeService.setPopularAnime();
-          setAnimes(animeList);
-      };
+        const fetchAnimes = async () => {
+            const animeService = new AnimeService();
+            const animeList = await animeService.setPopularAnime();
+            setAnimes(animeList);
+        };
 
-      fetchAnimes();
-  }, []);
+        fetchAnimes();
+    }, []);
 
     return (
         <div>

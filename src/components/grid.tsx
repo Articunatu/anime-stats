@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import CardComponent from './card';
+import Card from './card';
 import  Anime from '../models/anime';
 
 const GridContainer = styled.div`
@@ -13,7 +13,7 @@ const GridComponent: React.FC<{ animes: Anime[] }> = ({ animes }) => {
     return (
         <GridContainer>
             {animes.map((anime) => (
-                <CardComponent key={anime.id} anime={anime} />
+                <Card key={anime.id} anime={anime} />
             ))}
         </GridContainer>
     );

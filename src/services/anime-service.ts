@@ -2,7 +2,6 @@ import axios from 'axios';
 import Anime  from '../models/anime';
 import Season from '../models/season';
 
-
 interface AnimeResponse {
     data: AnimeData[];
 }
@@ -32,16 +31,21 @@ class AnimeService {
     private readonly _storageKey = 'anime_data';
 
     public async setPopularAnime(): Promise<Anime[]> {
+        const animeListFromStorage = this.loadLocalData();
+        if (animeListFromStorage.length > 0) {
+            return animeListFromStorage;
+        }
+
         const animeList: Anime[] = [];
-        const animeData = await this.loadLocalData();
         const response = await axios.get<AnimeResponse>(
             'https://api.jikan.moe/v4/top/anime?type=tv&filter=bypopularity&limit=10&page=2'
         );
+        
         if (response.data?.data) {
             for (const data of response.data.data) {
                 const title = data.title_english || '';
                 const titleSubstring = title.length > 14 ? title.substring(0, 8) : title;
-                const existingAnime = animeData.find((anime) =>
+                const existingAnime = animeListFromStorage.find((anime) =>
                     anime.title.startsWith(titleSubstring)
                 );
                 if (existingAnime) {
@@ -52,7 +56,7 @@ class AnimeService {
                         number: amountOfSeasons + 1,
                         audienceScore: data.score ?? 0,
                         amtOfScorers: data.scored_by ?? 0,
-                        amtOfEpisodes: 0, 
+                        amtOfEpisodes: 0,
                         premier: data.aired?.from ?? '',
                         finale: data.aired?.to ?? '',
                         imageUrl: data.images?.jpg.image_url ?? '',
@@ -78,12 +82,13 @@ class AnimeService {
                         ],
                     };
 
-                    animeData.push(newAnime);
                     animeList.push(newAnime);
                 }
             }
-            await this.saveLocalData(animeData);
+            // Save the data to localStorage for future use
+            await this.saveLocalData(animeList);
         }
+
         return animeList;
     }
 
@@ -106,11 +111,4 @@ class AnimeService {
     }
 }
 
-(async () => {
-    const animeService = new AnimeService();
-    const popularAnime = await animeService.setPopularAnime();
-    console.log('Updated Anime List:', popularAnime);
-})();
-
 export default AnimeService;
-
