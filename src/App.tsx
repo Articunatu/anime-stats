@@ -9,7 +9,7 @@ const App: React.FC = () => {
     useEffect(() => {
         const fetchAnimes = async () => {
             const animeService = new AnimeService();
-            const animeList = await animeService.setPopularAnime();
+            const animeList = await animeService.setPopularAnime(500);
             setAnimes(animeList);
         };
 
