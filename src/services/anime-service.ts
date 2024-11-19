@@ -32,7 +32,7 @@ interface Jpg {
 class AnimeService {
     private readonly _storageKey = 'anime_data';
 
-   public async setPopularAnime(totalEntries = 100): Promise<Anime[]> {
+    public async setPopularAnime(totalEntries = 100): Promise<Anime[]> {
         const animeListFromStorage = this.loadLocalData();
         if (animeListFromStorage.length > 0) {
             return animeListFromStorage;
@@ -99,9 +99,9 @@ class AnimeService {
         }
     
         await this.saveLocalData(animeList);
-
         return animeList;
     }
+    
 
     private loadLocalData(): Anime[] {
         try {

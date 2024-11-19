@@ -1,26 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import GridComponent from './components/grid';
-import AnimeService from './services/anime-service';
-import Anime from './models/anime'; 
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import GridComponent from '../src/components/grid';
+import UserListPage from '../src/pages//user-list';
 
 const App: React.FC = () => {
-    const [animes, setAnimes] = useState<Anime[]>([]);
-
-    useEffect(() => {
-        const fetchAnimes = async () => {
-            const animeService = new AnimeService();
-            const animeList = await animeService.setPopularAnime();
-            setAnimes(animeList);
-        };
-
-        fetchAnimes();
-    }, []);
-
     return (
-        <div>
-            <h1>Anime List</h1>
-            <GridComponent animes={animes} />
-        </div>
+        <Router>
+            <nav>
+                <Link to="/">Home</Link>
+                <Link to="/saved-list">My List</Link>
+            </nav>
+            <Switch>
+                <Route exact path="/" component={GridComponent} />
+                <Route path="/saved-list" component={UserListPage} />
+            </Switch>
+        </Router>
     );
 };
 
