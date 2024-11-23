@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import Anime  from '../models/anime'; 
-import Season  from '../models/season'; 
+import Anime from '../models/anime';
+import Season from '../models/season';
 
 interface CardProps {
     anime: Anime;
@@ -8,39 +8,57 @@ interface CardProps {
 
 const CardContainer = styled.div`
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Justera boxarna från toppen */
     margin: 1em;
     padding: 1em;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
-const ImageContainer = styled.div`
-    flex: 0 0 150px;  // Fixera bildens bredd till 150px
-    margin-right: 1em;
+const BoxWithBorder = styled.div`
+    border: 4px solid #D3B588; /* Beige ramfärg */
+    background-color: #FAF3E0; /* Ljus beige bakgrund */
+    border-radius: 12px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; /* Vertikal layout för innehåll */
+    justify-content: center;
+    align-items: center;
+    width: 200px; /* Fixerad bredd */
+    height: 300px; /* Fixerad höjd */
+`;
+
+const ImageContainer = styled(BoxWithBorder)`
+    flex-shrink: 0; /* Förhindra att bilden krymper */
+    margin-right: 0; /* Ta bort avståndet mellan bild och info */
 `;
 
 const Image = styled.img`
-    width: 100%;
-    height: auto;
+    width: 100%; /* Fyller BoxWithBorder */
+    height: 100%; /* Matchar höjden på BoxWithBorder */
+    object-fit: cover;
     border-radius: 8px;
 `;
 
-const InfoContainer = styled.div`
-    flex: 1;
+const InfoContainer = styled(BoxWithBorder)`
+    margin-left: 0; /* Ta bort avståndet mellan info och bild */
+    overflow: hidden; /* Hantera text som inte får plats */
 `;
 
 const Title = styled.h3`
     margin: 0;
-    font-size: 1.5em;
+    font-size: 1.2em;
+    font-weight: bold;
     color: #BF4F74;
+    text-align: center; /* Centrera texten */
 `;
 
 const SeasonInfo = styled.p`
-    font-size: 1.1em;
+    font-size: 0.9em;
     margin: 0.5em 0;
+    text-align: center; /* Centrera texten */
+    white-space: normal; /* Tillåt radbrytning */
+    word-wrap: break-word; /* Bryt ord om nödvändigt */
+    overflow: hidden;
 `;
 
 const Card: React.FC<CardProps> = ({ anime }) => {
@@ -70,3 +88,4 @@ const Card: React.FC<CardProps> = ({ anime }) => {
 };
 
 export default Card;
+

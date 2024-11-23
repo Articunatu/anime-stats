@@ -4,9 +4,11 @@ import  Anime from '../models/anime';
 
 const GridContainer = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* Tre kolumner per rad */
     gap: 1em;
     justify-content: center;
+    width: 100%; /* Se till att den fyller hela bredden */
+    margin: 0 auto; /* Centrerar innehållet om det finns extra utrymme */
 `;
 
 const GridComponent: React.FC<{ animes: Anime[] }> = ({ animes }) => {
