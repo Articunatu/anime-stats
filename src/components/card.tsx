@@ -1,9 +1,13 @@
 import styled from 'styled-components';
 import Anime from '../models/anime';
 import Season from '../models/season';
+import Button from './button';
+import { useContext } from 'react';
+import { AnimeContext } from '../hooks/anime-context';
 
 interface CardProps {
     anime: Anime;
+    onRemoveAnime: (animeId: number) => void; 
 }
 
 const CardContainer = styled.div`
@@ -62,11 +66,19 @@ const SeasonInfo = styled.p`
 `;
 
 const Card: React.FC<CardProps> = ({ anime }) => {
+    const context = useContext(AnimeContext);
+
+    if (!context) {
+        throw new Error('AnimeContext is not provided');
+    }
+
+    const { addAnime } = context; 
+    const { removeAnime } = context; 
     const seasons: Season[] = anime.seasons;
 
     const averageScore = seasons.reduce((acc, season) => acc + season.audienceScore, 0) / seasons.length;
-    const premier = seasons[0].premier;
-    const finale = seasons[seasons.length - 1].finale;
+    const premier = seasons[0].premier.split('T')[0]; 
+    const finale = seasons[seasons.length - 1].finale.split('T')[0]; 
     const totalEpisodes = seasons.reduce((acc, season) => acc + season.amtOfEpisodes, 0);
     const lastSeasonNumber = seasons[seasons.length - 1].number;
 
@@ -79,9 +91,11 @@ const Card: React.FC<CardProps> = ({ anime }) => {
                 <Title>{anime.title}</Title>
                 <SeasonInfo>Average Score: {averageScore.toFixed(2)}</SeasonInfo>
                 <SeasonInfo>Total Episodes: {totalEpisodes}</SeasonInfo>
-                <SeasonInfo>Premiered: {premier}</SeasonInfo>
-                <SeasonInfo>Finale: {finale}</SeasonInfo>
+                <SeasonInfo>Premiered: {premier.split('T')[0]}</SeasonInfo>
+                <SeasonInfo>Finale: {finale.split('T')[0]}</SeasonInfo>
                 <SeasonInfo>Seasons: {lastSeasonNumber}</SeasonInfo>
+                <Button onClick={() => addAnime(anime)}>Add to My List</Button>
+                <Button onClick={() => removeAnime(anime.id)}>Remove from List</Button> {/* Trigger removal */}
             </InfoContainer>
         </CardContainer>
     );
