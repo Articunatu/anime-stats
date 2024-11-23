@@ -12,40 +12,40 @@ interface CardProps {
 
 const CardContainer = styled.div`
     display: flex;
-    align-items: flex-start; /* Justera boxarna från toppen */
+    align-items: flex-start;
     margin: 1em;
     padding: 1em;
 `;
 
 const BoxWithBorder = styled.div`
-    border: 4px solid #D3B588; /* Beige ramfärg */
-    background-color: #FAF3E0; /* Ljus beige bakgrund */
+    border: 4px solid #D3B588;
+    background-color: #FAF3E0; 
     border-radius: 12px;
     padding: 10px;
     box-sizing: border-box;
     display: flex;
-    flex-direction: column; /* Vertikal layout för innehåll */
+    flex-direction: column; 
     justify-content: center;
     align-items: center;
-    width: 200px; /* Fixerad bredd */
-    height: 300px; /* Fixerad höjd */
+    width: 200px;
+    height: 300px; 
 `;
 
 const ImageContainer = styled(BoxWithBorder)`
-    flex-shrink: 0; /* Förhindra att bilden krymper */
-    margin-right: 0; /* Ta bort avståndet mellan bild och info */
+    flex-shrink: 0; 
+    margin-right: 0;
 `;
 
 const Image = styled.img`
-    width: 100%; /* Fyller BoxWithBorder */
-    height: 100%; /* Matchar höjden på BoxWithBorder */
+    width: 100%; 
+    height: 100%;
     object-fit: cover;
     border-radius: 8px;
 `;
 
 const InfoContainer = styled(BoxWithBorder)`
-    margin-left: 0; /* Ta bort avståndet mellan info och bild */
-    overflow: hidden; /* Hantera text som inte får plats */
+    margin-left: 0;
+    overflow: hidden;
 `;
 
 const Title = styled.h3`
@@ -53,17 +53,30 @@ const Title = styled.h3`
     font-size: 1.2em;
     font-weight: bold;
     color: #BF4F74;
-    text-align: center; /* Centrera texten */
+    text-align: center;
 `;
 
 const SeasonInfo = styled.p`
     font-size: 0.9em;
     margin: 0.5em 0;
-    text-align: center; /* Centrera texten */
-    white-space: normal; /* Tillåt radbrytning */
-    word-wrap: break-word; /* Bryt ord om nödvändigt */
+    text-align: center; 
+    white-space: normal;
+    word-wrap: break-word;
     overflow: hidden;
 `;
+
+const Score = styled.span`
+    display: inline-block;
+    background-color: #4A90E2;
+    color: white;
+    border-radius: 12px;
+    padding: 0.3em 0.8em;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-left: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+`;
+
 
 const Card: React.FC<CardProps> = ({ anime }) => {
     const context = useContext(AnimeContext);
@@ -89,13 +102,18 @@ const Card: React.FC<CardProps> = ({ anime }) => {
             </ImageContainer>
             <InfoContainer>
                 <Title>{anime.title}</Title>
-                <SeasonInfo>Average Score: {averageScore.toFixed(2)}</SeasonInfo>
-                <SeasonInfo>Total Episodes: {totalEpisodes}</SeasonInfo>
+                <SeasonInfo>
+                    Score: 
+                    <Score>
+                        {averageScore.toFixed(2)}
+                    </Score>
+                </SeasonInfo>
+                {/* <SeasonInfo>Total Episodes: {totalEpisodes}</SeasonInfo>
                 <SeasonInfo>Premiered: {premier.split('T')[0]}</SeasonInfo>
-                <SeasonInfo>Finale: {finale.split('T')[0]}</SeasonInfo>
+                <SeasonInfo>Finale: {finale.split('T')[0]}</SeasonInfo> */}
                 <SeasonInfo>Seasons: {lastSeasonNumber}</SeasonInfo>
-                <Button onClick={() => addAnime(anime)}>Add to My List</Button>
-                <Button onClick={() => removeAnime(anime.id)}>Remove from List</Button> {/* Trigger removal */}
+                <Button $primary={true} onClick={() => addAnime(anime)}>Add</Button>
+                <Button onClick={() => removeAnime(anime.id)}>Remove</Button> {/* Trigger removal */}
             </InfoContainer>
         </CardContainer>
     );
