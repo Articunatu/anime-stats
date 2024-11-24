@@ -1,21 +1,25 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import FilterBar from '../components/filter-bar';
 import AnimeService from '../services/anime-service';
 import GridComponent from '../components/grid';
 import Anime from '../models/anime';
+import Header from '../components/header'; 
+import Pagination from '../components/pagination'; 
 
 const TopList: React.FC = () => {
     const [animeList, setAnimeList] = useState<Anime[]>([]);
     const [filters, setFilters] = useState({ search: '', minScore: 1, maxScore: 10 });
-
-    React.useEffect(() => {
+    const [currentPage, setCurrentPage] = useState(1); 
+    const [totalPages, setTotalPages] = useState(1);
+    useEffect(() => {
         const fetchData = async () => {
             const service = new AnimeService();
-            const data = await service.getPopularAnime();
+            const data = await service.getPopularAnime(currentPage); 
             setAnimeList(data);
+            setTotalPages(5); 
         };
         fetchData();
-    }, []);
+    }, [currentPage]); 
 
     const filteredAnime = useMemo(() => {
         return animeList.filter((anime) => {
@@ -28,10 +32,16 @@ const TopList: React.FC = () => {
     }, [animeList, filters]);
 
     return (
-        <div>
+        <>
+            <Header />
             <FilterBar onFilterChange={setFilters} />
             <GridComponent animes={filteredAnime} />
-        </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage} 
+            />
+        </>
     );
 };
 
