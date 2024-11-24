@@ -13,17 +13,15 @@ const GridContainer = styled.div`
 
 interface GridComponentProps {
     animes: Anime[]; 
-    onRemoveAnime: (animeId: number) => void;  
 }
 
-const GridComponent: React.FC<GridComponentProps> = ({ animes, onRemoveAnime }) => {
+const GridComponent: React.FC<GridComponentProps> = ({ animes }) => {
     return (
         <GridContainer>
             {animes.map((anime) => (
                 <Card 
                     key={anime.id} 
                     anime={anime} 
-                    onRemoveAnime={onRemoveAnime} 
                 />
             ))}
         </GridContainer>

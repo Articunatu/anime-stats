@@ -1,9 +1,8 @@
-import Season from "./season";
-
 interface Anime {
     id: number;
     title: string;
-    seasons: Season[];
+    audienceScore: number;
+    imageUrl: string;
 }
 
 export default Anime;
