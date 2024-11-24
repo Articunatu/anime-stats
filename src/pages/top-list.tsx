@@ -1,31 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import GridComponent from '../components/grid'; 
-import AnimeService from '../services/anime-service';  
-import Anime from '../models/anime'; 
-import { Link } from 'react-router-dom';  
-import Button from '../components/button';  
+import React, { useState, useMemo } from 'react';
+import FilterBar from '../components/filter-bar';
+import AnimeService from '../services/anime-service';
+import GridComponent from '../components/grid';
+import Anime from '../models/anime';
 
 const TopList: React.FC = () => {
-    const [animes, setAnimes] = useState<Anime[]>([]);
+    const [animeList, setAnimeList] = useState<Anime[]>([]);
+    const [filters, setFilters] = useState({ search: '', minScore: 1, maxScore: 10 });
 
-    useEffect(() => {
-        const fetchAnimes = async () => {
-            const animeService = new AnimeService();
-            const animeList = await animeService.getPopularAnime();
-            setAnimes(animeList);  
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const service = new AnimeService();
+            const data = await service.getPopularAnime();
+            setAnimeList(data);
         };
-        fetchAnimes();  
+        fetchData();
     }, []);
+
+    const filteredAnime = useMemo(() => {
+        return animeList.filter((anime) => {
+            const matchesSearch = anime.title
+                .toLowerCase()
+                .startsWith(filters.search.toLowerCase());
+            const matchesScore = anime.audienceScore >= filters.minScore && anime.audienceScore <= filters.maxScore;
+            return matchesSearch && matchesScore;
+        });
+    }, [animeList, filters]);
 
     return (
         <div>
-            <Link to="/user-list">  
-                <Button>Go to Your List</Button>
-            </Link>
-            <h1>Top Anime</h1>
-            <GridComponent
-                animes={animes}
-            />
+            <FilterBar onFilterChange={setFilters} />
+            <GridComponent animes={filteredAnime} />
         </div>
     );
 };

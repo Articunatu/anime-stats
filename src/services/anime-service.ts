@@ -8,7 +8,7 @@ class AnimeService {
 
         try {
             const response = await axios.get<AnimeResponse>(
-                `https://api.jikan.moe/v4/top/anime?type=tv&filter=bypopularity&limit=10&page=${page}`
+                `https://api.jikan.moe/v4/top/anime?type=tv&filter=bypopularity&limit=25&page=${page}`
             );
 
             if (response.data?.data) {
